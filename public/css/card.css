@@ -1,0 +1,64 @@
+.grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.card {
+    border: solid 1px rgb(188, 188, 188);
+}
+
+.card-title {
+    margin: 10px 20px;
+}
+
+.card-body {
+    margin: 0px 20px;
+    margin-bottom: 20px;
+}
+
+.card-amount {
+    margin-bottom: 5px;
+}
+
+.card-image img {
+    width: 100%;
+}
+
+button {
+    width: 100%;
+    height: 30px;
+    background-color: rgb(86, 0, 129);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(119, 0, 179);
+}
+
+.card-description {
+    margin-bottom: 20px;
+}
+
+.link-product {
+    text-decoration: none;
+    width: 100%;
+    height: 30px;
+    background-color: rgb(86, 0, 129);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.link-product:hover {
+    background-color: rgb(119, 0, 179);
+}

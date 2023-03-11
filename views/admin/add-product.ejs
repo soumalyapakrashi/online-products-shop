@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/headers') %>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/forms.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+        <h2>Enter New Product</h2>
+        <form action="/admin/post-product" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title">
+            </div>
+            <div class="form-group">
+                <label for="picture">Picture URL</label>
+                <input type="text" name="picture" id="picture">
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" name="amount" id="amount" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

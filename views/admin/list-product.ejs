@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/headers') %>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/card.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+        <% if(products.length === 0) { %>
+            <h2>No products to display</h2>
+        <% } else { %>
+            <div class="grid-4">
+                <% for(product of products) { %>
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="<%= product.picture %>" alt="<%= product.title %>">
+                        </div>
+                        <div class="card-title">
+                            <h2><%= product.title %></h2>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-amount">$<%= product.amount %></h4>
+                            <p class="card-description"><%= product.description %></p>
+
+                            <div class="grid-2">
+                                <a href="#" class="link-product">
+                                    <p>Edit</p>
+                                </a>
+                                <form action="#" method="POST">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
