@@ -9,26 +9,51 @@
     <%- include('../partials/navbar') %>
 
     <div class="container">
-        <h2>Enter New Product</h2>
-        <form action="/admin/post-product" method="POST">
+        <% if(activePage === 'Edit Product') { %>
+            <h2>Edit <%= product.title %></h2>
+        <% } else { %>
+            <h2>Add New Product</h2>
+        <% } %>
+
+        <form action="<% if(activePage === 'Edit Product') { %> /admin/edit-product/<%= product.id %> <% } else { %> /admin/post-product <% } %>" method="POST">
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" name="title" id="title">
+                <% if(activePage === 'Edit Product') { %>
+                    <input type="text" name="title" id="title" value="<%= product.title %>">
+                <% } else { %>
+                    <input type="text" name="title" id="title">
+                <% } %>
             </div>
             <div class="form-group">
                 <label for="picture">Picture URL</label>
-                <input type="text" name="picture" id="picture">
+                <% if(activePage === 'Edit Product') { %>
+                    <input type="text" name="picture" id="picture" value="<%= product.picture %>">
+                <% } else { %>
+                    <input type="text" name="picture" id="picture">
+                <% } %>
             </div>
             <div class="form-group">
                 <label for="amount">Amount</label>
-                <input type="number" name="amount" id="amount" step="0.01">
+                <% if(activePage === 'Edit Product') { %>
+                    <input type="number" name="amount" id="amount" step="0.01" value="<%= product.amount %>">
+                <% } else { %>
+                    <input type="number" name="amount" id="amount" step="0.01">
+                <% } %>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                <% if(activePage === 'Edit Product') { %>
+                    <textarea name="description" id="description" cols="30" rows="10"><%= product.description %></textarea>
+                <% } else { %>
+                    <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                <% } %>
             </div>
 
-            <button type="submit">Submit</button>
+            <% if(activePage === 'Edit Product') { %>
+                <button type="submit">Update</button>
+            <% } else { %>
+                <button type="submit">Submit</button>
+            <% } %>
         </form>
     </div>
 </body>
