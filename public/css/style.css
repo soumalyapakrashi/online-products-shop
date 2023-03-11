@@ -35,3 +35,37 @@ nav ul {
     width: 90%;
     margin: 0px auto;
 }
+
+.product-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.product-title {
+    font-size: 4rem;
+    margin-bottom: 30px;
+}
+
+.product-amount {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.product-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.product-detail button {
+    width: 80%;
+    height: 40px;
+    font-size: 1.1rem;
+    background-color: rgb(86, 0, 129);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.product-detail button:hover {
+    background-color: rgb(123, 1, 184);
+}
