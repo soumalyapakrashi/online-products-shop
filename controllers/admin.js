@@ -38,6 +38,13 @@ function postProduct(request, response, next) {
     response.redirect('/products');
 }
 
+function deleteProduct(request, response, next) {
+    const product_id = request.params.productId;
+    console.log(product_id);
+    Product.deleteProductById(product_id);
+    response.redirect('/admin/products');
+}
+
 function listProductPage(request, response, next) {
     response.render('admin/list-product', { pageTitle: 'Admin Products', activePage: 'Admin Products', products: Product.getProducts() });
 }
@@ -47,5 +54,6 @@ module.exports = {
     postProduct: postProduct,
     listProductPage: listProductPage,
     editProductPage: editProductPage,
-    editProduct: editProduct
+    editProduct: editProduct,
+    deleteProduct: deleteProduct
 }
