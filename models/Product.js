@@ -1,7 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+
 class Product {
     static products = [];
 
     constructor(title, picture, amount, description) {
+        Product.#readFile();
+        
         Product.products.push({
             id: Math.random().toString(),
             title: title,
@@ -9,13 +14,28 @@ class Product {
             amount: amount,
             description: description
         });
+
+        Product.#writeFile();
+    }
+
+    static #readFile() {
+        const file = fs.readFileSync(path.resolve(__dirname, '../data/products.json'), 'utf-8');
+        if(file !== '') {
+            Product.products = JSON.parse(file);
+        }
+    }
+
+    static #writeFile() {
+        fs.writeFileSync(path.resolve(__dirname, '../data/products.json'), JSON.stringify(Product.products));
     }
 
     static getProducts() {
+        Product.#readFile();
         return Product.products;
     }
 
     static getProductById(id) {
+        Product.#readFile();
         return Product.products.find(product => product.id === id);
     }
 
@@ -28,6 +48,7 @@ class Product {
                 Product.products[index].description = description;
             }
         }
+        Product.#writeFile();
     }
 
     static deleteProductById(id) {
@@ -37,6 +58,8 @@ class Product {
         if(index_to_delete !== -1) {
             Product.products.splice(index_to_delete, 1);
         }
+
+        Product.#writeFile();
     }
 }
 
