@@ -8,9 +8,9 @@ router.get('/products', shopController.listProductsPage);
 
 router.get('/products/:productId', shopController.showProductPage);
 
-router.get('/cart', (request, response, next) => {
-    response.render('shop/cart', { pageTitle: 'Cart', activePage: 'Cart' })
-})
+router.get('/cart', shopController.showCartPage);
+
+router.post('/post-cart/:productId', shopController.postToCart);
 
 router.get('/', (request, response, next) => {
     response.render('shop/index', { pageTitle: 'Shop', activePage: 'Shop' })

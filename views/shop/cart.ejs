@@ -3,8 +3,63 @@
 <head>
     <%- include('../partials/headers') %>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/cart.css">
 </head>
 <body>
     <%- include('../partials/navbar') %>
+    <div class="container">
+        <% if(cart.length === 0) { %>
+            <h2>No Products in Cart to Display</h2>
+        <% } else { %>
+            <div class="cart-items">
+                <% for(cart_item of cart) { %>
+                    <div class="card">
+                        <img src="<%= cart_item.product.picture %>" alt="<%= cart_item.product.title %>" class="cart-item-image">
+                        <div class="item-description">
+                            <div>
+                                <h2><%= cart_item.product.title %></h2>
+                                <h4>Price per item: $<%= cart_item.product.amount %></h4>
+                            </div>
+                        </div>
+                        <div class="info-display">
+                            <div>
+                                <h6>QUANTITY</h6>
+                                <h2><%= cart_item.quantity %></h2>
+                            </div>
+                        </div>
+                        <div class="info-display">
+                            <div>
+                                <h6>TOTAL PRICE</h6>
+                                <h2>$<%= cart_item.quantity * cart_item.product.amount %></h2>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+
+                <div class="summary">
+                    <div>
+                        <div class="info-display">
+                            <div>
+                                <h6>TOTAL AMOUNT</h6>
+                                <h2>$<%= totalAmount %></h2>
+                            </div>
+                        </div>
+                        <div class="info-display">
+                            <div>
+                                <h6>TAX</h6>
+                                <h2>$<%= tax %></h2>
+                            </div>
+                        </div>
+                        <div class="info-display">
+                            <div>
+                                <h6>GROSS AMOUNT</h6>
+                                <h2>$<%= grossAmount %></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
 </body>
 </html>
