@@ -39,6 +39,7 @@ nav ul {
 .product-detail {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 50px;
 }
 
 .product-title {
@@ -53,7 +54,7 @@ nav ul {
 
 .product-description {
     font-size: 1.2rem;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 .product-detail button {
@@ -68,4 +69,10 @@ nav ul {
 
 .product-detail button:hover {
     background-color: rgb(123, 1, 184);
+}
+
+.product-image {
+    height: 450px;
+    width: 600px;
+    object-fit: contain;
 }

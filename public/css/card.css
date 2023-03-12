@@ -29,6 +29,8 @@
 
 .card-image img {
     width: 100%;
+    height: 170px;
+    object-fit: cover;
 }
 
 button {
@@ -45,7 +47,14 @@ button:hover {
 }
 
 .card-description {
+    --lh: 1.14rem;
+    --max-lines: 6;
     margin-bottom: 20px;
+    line-height: var(--lh);
+    height: calc(var(--lh) * var(--max-lines));
+    white-space: break-spaces;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .link-product {
