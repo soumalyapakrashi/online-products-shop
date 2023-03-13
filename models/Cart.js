@@ -23,17 +23,14 @@ class Cart {
             if(quantity === -1) {
                 Cart.#cart.splice(product_index, 1);
             }
+            else {
+                Cart.#cart[product_index].quantity -= quantity;
+            }
         }
     }
 
     static findProductById(id) {
-        const item_index = Cart.#cart.find(item => item.product.id === id);
-        if(item_index === undefined) {
-            return undefined;
-        }
-        else {
-            return Cart.#cart[item_index];
-        }
+        return Cart.#cart.find(item => item.product.id === id);
     }
 
     static getProducts() {

@@ -14,7 +14,20 @@
             <p class="product-description"><%= product.description %></p>
         
             <form action="/post-cart/<%= product.id %>?currentPage=productDetail" method="POST">
-                <button type="submit">Add to Cart</button>
+                <div class="product-instances-in-cart">
+                    <p><i><%= quantity %> units of this item in cart</i></p>
+                </div>
+
+                <% if(quantity === 0) { %>
+                    <div class="controls">
+                        <button type="submit" name="action" value="add">Add to Cart</button>
+                    </div>
+                <% } else { %>
+                    <div class="controls">
+                        <button type="submit" name="action" value="add">Add 1 more unit</button>
+                        <button type="submit" name="action" value="delete">Remove 1 unit</button>
+                    </div>
+                <% } %>
             </form>
         </div>
 

@@ -11,23 +11,34 @@ function listProductsPage(request, response, next) {
 
 function showProductPage(request, response, next) {
     const product = Product.getProductById(request.params.productId);
+    const product_in_cart = Cart.findProductById(request.params.productId);
+
+    const quantity = product_in_cart !== undefined ? product_in_cart.quantity : 0;
+
     response.render('shop/product-detail', { 
         pageTitle: product.title, 
         activePage: 'Products', 
-        product: product
+        product: product,
+        quantity: quantity
     });
 }
 
 function postToCart(request, response, next) {
     const product_id = request.params.productId;
     const current_page = request.query.currentPage;
+    const action = request.body.action;
 
-    // Check if product actually exists in the catalog
-    const product = Product.getProductById(product_id);
+    if(action === 'add') {
+        // Check if product actually exists in the catalog
+        const product = Product.getProductById(product_id);
 
-    // If product exists in catalog, add it to cart
-    if(product !== undefined) {
-        Cart.addToCart(product, 1);
+        // If product exists in catalog, add it to cart
+        if(product !== undefined) {
+            Cart.addToCart(product, 1);
+        }
+    }
+    else if(action === "delete") {
+        Cart.removeFromCart(product_id, 1);
     }
 
     if(current_page === 'productDetail') {
