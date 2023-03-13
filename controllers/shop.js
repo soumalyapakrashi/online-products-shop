@@ -38,6 +38,12 @@ function postToCart(request, response, next) {
     }
 }
 
+function deleteFromCart(request, response, next) {
+    const product_id = request.params.productId;
+    Cart.removeFromCart(product_id, -1);
+    response.redirect('/cart');
+}
+
 function showCartPage(request, response, next) {
     const cart = Cart.getProducts();
 
@@ -63,5 +69,6 @@ module.exports = {
     listProductsPage: listProductsPage,
     showProductPage: showProductPage,
     postToCart: postToCart,
-    showCartPage: showCartPage
+    showCartPage: showCartPage,
+    deleteFromCart: deleteFromCart
 }

@@ -16,6 +16,16 @@ class Cart {
         }
     }
 
+    static removeFromCart(id, quantity) {
+        const product_index = Cart.#cart.findIndex(item => item.product.id === id);
+        if(product_index !== -1) {
+            // quantity will be -1 if all the quantities of the product should be removed
+            if(quantity === -1) {
+                Cart.#cart.splice(product_index, 1);
+            }
+        }
+    }
+
     static findProductById(id) {
         const item_index = Cart.#cart.find(item => item.product.id === id);
         if(item_index === undefined) {
