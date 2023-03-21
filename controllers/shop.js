@@ -2,10 +2,14 @@ const Product = require( "../models/Product");
 const Cart = require("../models/Cart");
 
 function listProductsPage(request, response, next) {
-    response.render('shop/list-product', { 
-        pageTitle: 'Products', 
-        activePage: 'Products', 
-        products: Product.getProducts() 
+    Product.getProducts().then(([data, field_data]) => {
+        response.render('shop/list-product', { 
+            pageTitle: 'Products',
+            activePage: 'Products',
+            products: data
+        });
+    }).catch(error => {
+        console.log(error);
     });
 }
 

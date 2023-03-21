@@ -46,7 +46,15 @@ function deleteProduct(request, response, next) {
 }
 
 function listProductPage(request, response, next) {
-    response.render('admin/list-product', { pageTitle: 'Admin Products', activePage: 'Admin Products', products: Product.getProducts() });
+    Product.getProducts().then(([data, field_data]) => {
+        response.render('admin/list-product', {
+            pageTitle: 'Admin Products',
+            activePage: 'Admin Products',
+            products: data
+        });
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 module.exports = {

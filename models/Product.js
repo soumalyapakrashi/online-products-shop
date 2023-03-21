@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const db = require('../utils/database');
+
 class Product {
     static products = [];
 
@@ -30,8 +32,7 @@ class Product {
     }
 
     static getProducts() {
-        Product.#readFile();
-        return Product.products;
+        return db.execute('SELECT * FROM product');
     }
 
     static getProductById(id) {
