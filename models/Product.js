@@ -36,8 +36,7 @@ class Product {
     }
 
     static getProductById(id) {
-        Product.#readFile();
-        return Product.products.find(product => product.id === id);
+        return db.execute(`SELECT * FROM product WHERE id = ${id}`);
     }
 
     static updateProductById(id, title, picture, amount, description) {
