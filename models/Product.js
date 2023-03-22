@@ -57,14 +57,10 @@ class Product {
     }
 
     static deleteProductById(id) {
-        let index_to_delete = Product.products.findIndex(product => product.id === id);
-
-        // If product has been found
-        if(index_to_delete !== -1) {
-            Product.products.splice(index_to_delete, 1);
-        }
-
-        Product.#writeFile();
+        return db.execute(
+            'DELETE FROM product WHERE id = ?',
+            [ id ]
+        );
     }
 }
 

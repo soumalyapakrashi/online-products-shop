@@ -51,9 +51,11 @@ function postProduct(request, response, next) {
 
 function deleteProduct(request, response, next) {
     const product_id = request.params.productId;
-    console.log(product_id);
-    Product.deleteProductById(product_id);
-    response.redirect('/admin/products');
+    Product.deleteProductById(product_id).then(() => {
+        response.redirect('/admin/products');
+    }).catch(error => {
+        console.log(error);
+    });
 }
 
 function listProductPage(request, response, next) {
