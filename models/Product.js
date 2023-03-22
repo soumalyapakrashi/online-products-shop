@@ -40,15 +40,10 @@ class Product {
     }
 
     static updateProductById(id, title, picture, amount, description) {
-        for(let index = 0; index < Product.products.length; index++) {
-            if(Product.products[index].id === id) {
-                Product.products[index].title = title;
-                Product.products[index].picture = picture;
-                Product.products[index].amount = amount;
-                Product.products[index].description = description;
-            }
-        }
-        Product.#writeFile();
+        return db.execute(
+            'UPDATE product SET title = ?, picture = ?, amount = ?, description = ? WHERE id = ?',
+            [ title, picture, amount, description, id ]
+        );
     }
 
     static deleteProductById(id) {

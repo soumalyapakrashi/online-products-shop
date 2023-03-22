@@ -9,13 +9,15 @@ function addProductPage(request, response, next) {
 
 function editProductPage(request, response, next) {
     const product_id = request.params.productId;
-    const product = Product.getProductById(product_id);
-
-    response.render('admin/add-product', {
-        pageTitle: product.title,
-        activePage: 'Edit Product',
-        product: product
-    });
+    Product.getProductById(product_id).then(([data, field_data]) => {
+        response.render('admin/add-product', {
+            pageTitle: data[0].title,
+            activePage: 'Edit Product',
+            product: data[0]
+        });
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 function editProduct(request, response, next) {
@@ -27,9 +29,11 @@ function editProduct(request, response, next) {
         request.body.picture,
         request.body.amount,
         request.body.description
-    );
-
-    response.redirect('/admin/products');
+    ).then(() => {
+        response.redirect('/admin/products');
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 function postProduct(request, response, next) {
