@@ -37,12 +37,12 @@ function editProduct(request, response, next) {
 }
 
 function postProduct(request, response, next) {
-    Product.addProduct(
-        request.body.title,
-        request.body.picture,
-        request.body.amount,
-        request.body.description
-    ).then(() => {
+    Product.create({
+        title: request.body.title,
+        picture: request.body.picture,
+        amount: request.body.amount,
+        description: request.body.description
+    }).then(product => {
         response.redirect('/products');
     }).catch(error => {
         console.log(error);
