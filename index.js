@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const shop_routes = require('./routes/shop');
 const admin_routes = require('./routes/admin');
 const error_route = require('./routes/error');
+const sequelize = require('./utils/database');
 
 const app = express();
 
@@ -21,4 +22,9 @@ app.use(shop_routes);
 // Default Not Found route
 app.use(error_route);
 
-app.listen(3000);
+// Sync model with the database and on success, start the server
+sequelize.sync().then(result => {
+    app.listen(3000);
+}).catch(error => {
+    console.log(error);
+})
