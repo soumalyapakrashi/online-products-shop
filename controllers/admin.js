@@ -59,11 +59,11 @@ function deleteProduct(request, response, next) {
 }
 
 function listProductPage(request, response, next) {
-    Product.getProducts().then(([data, field_data]) => {
+    Product.findAll().then(products => {
         response.render('admin/list-product', {
             pageTitle: 'Admin Products',
             activePage: 'Admin Products',
-            products: data
+            products: products
         });
     }).catch(error => {
         console.log(error);

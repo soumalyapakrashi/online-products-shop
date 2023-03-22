@@ -2,11 +2,11 @@ const Product = require( "../models/Product");
 const Cart = require("../models/Cart");
 
 function listProductsPage(request, response, next) {
-    Product.getProducts().then(([data, field_data]) => {
+    Product.findAll().then(products => {
         response.render('shop/list-product', { 
             pageTitle: 'Products',
             activePage: 'Products',
-            products: data
+            products: products
         });
     }).catch(error => {
         console.log(error);
