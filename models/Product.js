@@ -31,6 +31,13 @@ class Product {
         fs.writeFileSync(path.resolve(__dirname, '../data/products.json'), JSON.stringify(Product.products));
     }
 
+    static addProduct(title, picture, amount, description) {
+        return db.execute(
+            'INSERT INTO product (title, picture, amount, description) VALUES (?, ?, ?, ?)',
+            [ title, picture, amount, description ]
+        );
+    }
+
     static getProducts() {
         return db.execute('SELECT * FROM product');
     }

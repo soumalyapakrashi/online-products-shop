@@ -37,9 +37,16 @@ function editProduct(request, response, next) {
 }
 
 function postProduct(request, response, next) {
-    new Product(request.body.title, request.body.picture, request.body.amount, request.body.description);
-
-    response.redirect('/products');
+    Product.addProduct(
+        request.body.title,
+        request.body.picture,
+        request.body.amount,
+        request.body.description
+    ).then(() => {
+        response.redirect('/products');
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 function deleteProduct(request, response, next) {
