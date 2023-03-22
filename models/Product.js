@@ -36,7 +36,10 @@ class Product {
     }
 
     static getProductById(id) {
-        return db.execute(`SELECT * FROM product WHERE id = ${id}`);
+        return db.execute(
+            'SELECT * FROM product WHERE id = ?',
+            [ id ]
+        );
     }
 
     static updateProductById(id, title, picture, amount, description) {
