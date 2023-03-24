@@ -37,7 +37,7 @@ function editProduct(request, response, next) {
 }
 
 function postProduct(request, response, next) {
-    Product.create({
+    request.user.createProduct({
         title: request.body.title,
         picture: request.body.picture,
         amount: request.body.amount,
