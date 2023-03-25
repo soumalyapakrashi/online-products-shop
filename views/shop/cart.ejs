@@ -19,29 +19,29 @@
             <h2>No Products in Cart to Display</h2>
         <% } else { %>
             <div class="cart-items">
-                <% for(cart_item of cart) { %>
+                <% for(product of cart) { %>
                     <div class="card">
-                        <img src="<%= cart_item.product.picture %>" alt="<%= cart_item.product.title %>" class="cart-item-image">
+                        <img src="<%= product.picture %>" alt="<%= product.title %>" class="cart-item-image">
                         <div class="item-description">
                             <div>
-                                <h2><%= cart_item.product.title %></h2>
-                                <h4>Price per item: $<%= cart_item.product.amount %></h4>
+                                <h2><%= product.title %></h2>
+                                <h4>Price per item: $<%= product.amount %></h4>
                             </div>
                         </div>
                         <div class="info-display">
                             <div>
                                 <h6>QUANTITY</h6>
-                                <h2><%= cart_item.quantity %></h2>
+                                <h2><%= product.cartitem.quantity %></h2>
                             </div>
                         </div>
                         <div class="info-display">
                             <div>
                                 <h6>TOTAL PRICE</h6>
-                                <h2>$<%= cart_item.quantity * cart_item.product.amount %></h2>
+                                <h2>$<%= product.cartitem.quantity * product.amount %></h2>
                             </div>
                         </div>
                         <div class="info-display">
-                            <form action="/delete-cart/<%= cart_item.product.id %>" method="POST">
+                            <form action="/delete-cart/<%= product.id %>" method="POST">
                                 <button type="submit">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>

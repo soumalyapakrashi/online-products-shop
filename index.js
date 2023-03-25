@@ -7,6 +7,8 @@ const error_route = require('./routes/error');
 const sequelize = require('./utils/database');
 const Product = require('./models/Product');
 const User = require('./models/User');
+const Cart = require('./models/Cart');
+const CartItem = require('./models/CartItem');
 
 const app = express();
 
@@ -37,11 +39,16 @@ app.use(error_route);
 // Set up database associations
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 // Sync model with the database and on success, start the server
 sequelize.sync().then(() => {
+    // First get the default user created for now
     return User.findByPk(1);
 }).then(user => {
+    // If no default user is found, then create one. Else return the existing one.
     if(!user) {
         return User.create({
             name: 'Soumalya',
@@ -49,8 +56,21 @@ sequelize.sync().then(() => {
         });
     }
     return user;
-}).then(() => {
-    app.listen(3000);
+}).then(user => {
+    // Check if cart already exists for user
+    user.getCart().then(cart => {
+        // If cart does not exist, then create cart. Else do not.
+        // This is because every individual user will have only one Cart.
+        if(cart === null) {
+            return user.createCart();
+        }
+        else {
+            return cart;
+        }
+    }).then(() => {
+        // Once user and cart has been created, start the server.
+        app.listen(3000);
+    });
 }).catch(error => {
     console.log(error);
 });
