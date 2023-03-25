@@ -193,10 +193,35 @@ function showCartPage(request, response, next) {
     })
 }
 
+function showCheckoutPage(request, response, next) {
+    request.user.getCart().then(cart => {
+        return cart.getProducts();
+    }).then(products => {
+        // Calculate total amount, taxes, and gross amount
+        let total_amount = 0;
+        for(let product of products) {
+            total_amount += product.amount * product.cartitem.quantity;
+        }
+        // If some product is present, then add the tax. Else not.
+        const tax = total_amount > 0 ? 10 : 0;
+        const gross_amount = total_amount + tax;
+
+        response.render('shop/checkout', {
+            pageTitle: 'Checkout',
+            activePage: 'Cart',
+            cart: products,
+            totalAmount: total_amount,
+            tax: tax,
+            grossAmount: gross_amount
+        });
+    })
+}
+
 module.exports = {
     listProductsPage: listProductsPage,
     showProductPage: showProductPage,
     postToCart: postToCart,
     showCartPage: showCartPage,
-    deleteFromCart: deleteFromCart
+    deleteFromCart: deleteFromCart,
+    showCheckoutPage: showCheckoutPage
 }

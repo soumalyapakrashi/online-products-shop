@@ -58,6 +58,7 @@
 .summary > div {
     display: flex;
     gap: 60px;
+    align-items: center;
 }
 
 .info-display button {
@@ -74,4 +75,23 @@
 
 .info-display button:hover i {
     color: rgb(73, 73, 73);
+}
+
+.btn {
+    text-decoration: none;
+    width: 150px;
+    height: 40px;
+    background-color: rgb(86, 0, 129);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn:hover {
+    background-color: rgb(119, 0, 179);
+}
+
+.heading {
+    margin-bottom: 20px;
 }

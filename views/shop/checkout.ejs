@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/headers') %>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/cart.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+        <h1 class="heading">Order Details</h1>
+        <div class="cart-items">
+            <% for(product of cart) { %>
+                <div class="card">
+                    <img src="<%= product.picture %>" alt="<%= product.title %>" class="cart-item-image">
+                    <div class="item-description">
+                        <div>
+                            <h2><%= product.title %></h2>
+                            <h4>Price per item: $<%= product.amount %></h4>
+                        </div>
+                    </div>
+                    <div class="info-display">
+                        <div>
+                            <h6>QUANTITY</h6>
+                            <h2><%= product.cartitem.quantity %></h2>
+                        </div>
+                    </div>
+                    <div class="info-display">
+                        <div>
+                            <h6>TOTAL PRICE</h6>
+                            <h2>$<%= product.cartitem.quantity * product.amount %></h2>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+
+            <div class="summary">
+                <div>
+                    <div class="info-display">
+                        <div>
+                            <h6>TOTAL AMOUNT</h6>
+                            <h2>$<%= totalAmount %></h2>
+                        </div>
+                    </div>
+                    <div class="info-display">
+                        <div>
+                            <h6>TAX</h6>
+                            <h2>$<%= tax %></h2>
+                        </div>
+                    </div>
+                    <div class="info-display">
+                        <div>
+                            <h6>GROSS AMOUNT</h6>
+                            <h2>$<%= grossAmount %></h2>
+                        </div>
+                    </div>
+                    <a href="/place-order" class="btn">
+                        <p>Place Order</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -14,6 +14,8 @@ router.post('/post-cart/:productId', shopController.postToCart);
 
 router.post('/delete-cart/:productId', shopController.deleteFromCart);
 
+router.get('/checkout', shopController.showCheckoutPage);
+
 router.get('/', (request, response, next) => {
     response.render('shop/index', { pageTitle: 'Shop', activePage: 'Shop' })
 });
