@@ -217,11 +217,33 @@ function showCheckoutPage(request, response, next) {
     })
 }
 
+function placeOrder(request, response, next) {
+    request.user.getCart().then(cart => {
+        return cart.getProducts();
+    }).then(products => {
+        request.user.createOrder().then(order => {
+            return order.addProducts(products.map(product => {
+                product.orderitem = {
+                    quantity: product.cartitem.quantity
+                }
+                return product;
+            }));
+        }).then(() => {
+            response.redirect('/orders');
+        }).catch(errors => {
+            console.log(errors);
+        })
+    }).catch(errors => {
+        console.log(errors);
+    })
+}
+
 module.exports = {
     listProductsPage: listProductsPage,
     showProductPage: showProductPage,
     postToCart: postToCart,
     showCartPage: showCartPage,
     deleteFromCart: deleteFromCart,
-    showCheckoutPage: showCheckoutPage
+    showCheckoutPage: showCheckoutPage,
+    placeOrder: placeOrder
 }

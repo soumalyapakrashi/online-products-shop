@@ -9,6 +9,8 @@ const Product = require('./models/Product');
 const User = require('./models/User');
 const Cart = require('./models/Cart');
 const CartItem = require('./models/CartItem');
+const Order = require('./models/Order');
+const OrderItem = require('./models/OrderItem');
 
 const app = express();
 
@@ -42,6 +44,9 @@ User.hasMany(Product);
 User.hasOne(Cart);
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
+User.hasMany(Order);
+Product.belongsToMany(Order, { through: OrderItem });
+Order.belongsToMany(Product, { through: OrderItem });
 
 // Sync model with the database and on success, start the server
 sequelize.sync().then(() => {
