@@ -218,23 +218,62 @@ function showCheckoutPage(request, response, next) {
 }
 
 function placeOrder(request, response, next) {
+    // First get the current user's cart
+    let user_cart;
     request.user.getCart().then(cart => {
+        user_cart = cart;
+        // Then get all the products in the cart
         return cart.getProducts();
     }).then(products => {
-        request.user.createOrder().then(order => {
+        // Create a new order for the current user
+        return request.user.createOrder().then(order => {
+            // Add the products currently in cart to the newly created order.
+            // But as each product has different quantities to be added, we add a new field
+            // to the product object with which sequelize will update the joining table properly.
             return order.addProducts(products.map(product => {
+                // This will help to update the joining table properly.
+                // Sequelize will look for 'orderitem' property as this is the name of the
+                // joining table. We set the 'quantity' property in this table.
                 product.orderitem = {
                     quantity: product.cartitem.quantity
                 }
                 return product;
             }));
-        }).then(() => {
-            response.redirect('/orders');
         }).catch(errors => {
             console.log(errors);
         })
+    }).then(() => {
+        // Then clear the cart as items has already been added to the order
+        return user_cart.setProducts(null);
+    }).then(() => {
+        response.redirect('/orders');
     }).catch(errors => {
         console.log(errors);
+    })
+}
+
+function showOrdersPage(request, response, next) {
+    // Get all the orders for the current user. We are 'Eager Loading' the Products as well
+    // with the orders. Each order object will also have the products contained within that order.
+    request.user.getOrders({ include: Product }).then(orders => {
+        for(let order of orders) {
+            // Calculate the total amount of all the products in the order
+            let total_amount = 0;
+            for(let product of order.products) {
+                total_amount += product.amount * product.orderitem.quantity;
+            }
+            order.totalAmount = total_amount;
+            // Set the picture of the order to be the first product which we get.
+            // This is arbitrary and not for any reason!
+            order.picture = order.products[0].picture;
+        }
+        response.render('shop/order', {
+            pageTitle: 'Orders',
+            activePage: 'Orders',
+            orders: orders
+        })
+    }).catch(error => {
+        console.log(error);
     })
 }
 
@@ -245,5 +284,6 @@ module.exports = {
     showCartPage: showCartPage,
     deleteFromCart: deleteFromCart,
     showCheckoutPage: showCheckoutPage,
-    placeOrder: placeOrder
+    placeOrder: placeOrder,
+    showOrdersPage: showOrdersPage
 }

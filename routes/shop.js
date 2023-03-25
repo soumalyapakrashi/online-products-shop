@@ -18,6 +18,8 @@ router.get('/checkout', shopController.showCheckoutPage);
 
 router.post('/place-order', shopController.placeOrder);
 
+router.get('/orders', shopController.showOrdersPage);
+
 router.get('/', (request, response, next) => {
     response.render('shop/index', { pageTitle: 'Shop', activePage: 'Shop' })
 });

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/headers') %>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/cart.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+        <% if(orders.length === 0) { %>
+            <h2>No Orders Placed</h2>
+        <% } else { %>
+            <div class="cart-items">
+                <% for(order of orders) { %>
+                    <div class="card">
+                        <img src="<%= order.picture %>" alt="<%= order.id %>" class="cart-item-image">
+                        <div class="item-description">
+                            <div>
+                                <h2>Order Number: <%= order.id %></h2>
+                                <h4>Order Date: <%= order.createdAt %></h4>
+                            </div>
+                        </div>
+                        <div class="info-display">
+                            <div>
+                                <h6>AMOUNT</h6>
+                                <h2>$<%= order.totalAmount %></h2>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
