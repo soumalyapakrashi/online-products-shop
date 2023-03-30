@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const sequelize = require('../utils/database');
+const { sequelize } = require('../utils/database');
 
 // This model represents each product stored in the cart.
 // In SQL terms, it acts as the joining table between Cart and Product as they have a
