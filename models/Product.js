@@ -1,6 +1,20 @@
 const Sequelize = require('sequelize');
 
-const { sequelize } = require('../utils/database');
+const { sequelize, getDb } = require('../utils/database');
+
+class ProductMongo {
+    constructor(title, picture, amount, description) {
+        this.title = title,
+        this.picture = picture;
+        this.amount = amount;
+        this.description = description;
+    }
+
+    save() {
+        const db = getDb();
+        return db.collection('products').insertOne(this);
+    }
+}
 
 const Product = sequelize.define('product', {
     id: {
@@ -27,4 +41,7 @@ const Product = sequelize.define('product', {
     }
 });
 
-module.exports = Product;
+module.exports = {
+    Product: Product,
+    ProductMongo: ProductMongo
+};

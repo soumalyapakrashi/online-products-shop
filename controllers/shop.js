@@ -1,4 +1,4 @@
-const Product = require( "../models/Product");
+const { Product } = require( "../models/Product");
 
 function listProductsPage(request, response, next) {
     Product.findAll().then(products => {

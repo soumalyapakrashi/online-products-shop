@@ -5,7 +5,7 @@ const shop_routes = require('./routes/shop');
 const admin_routes = require('./routes/admin');
 const error_route = require('./routes/error');
 const { sequelize, mongoConnect } = require('./utils/database');
-const Product = require('./models/Product');
+const { Product } = require('./models/Product');
 const User = require('./models/User');
 const Cart = require('./models/Cart');
 const CartItem = require('./models/CartItem');
@@ -76,7 +76,6 @@ sequelize.sync().then(() => {
         // Once user and cart has been created, connect to the MongoDB database
         return mongoConnect()
     }).then(client => {
-        console.log(client);
         app.listen(3000);
     }).catch(error => {
         console.log(error);
