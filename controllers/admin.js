@@ -73,7 +73,17 @@ function deleteProduct(request, response, next) {
 }
 
 function listProductPage(request, response, next) {
-    Product.findAll().then(products => {
+    // Product.findAll().then(products => {
+    //     response.render('admin/list-product', {
+    //         pageTitle: 'Admin Products',
+    //         activePage: 'Admin Products',
+    //         products: products
+    //     });
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    ProductMongo.fetchAll().then(products => {
         response.render('admin/list-product', {
             pageTitle: 'Admin Products',
             activePage: 'Admin Products',
@@ -81,7 +91,7 @@ function listProductPage(request, response, next) {
         });
     }).catch(error => {
         console.log(error);
-    })
+    });
 }
 
 module.exports = {

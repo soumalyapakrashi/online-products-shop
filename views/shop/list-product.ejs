@@ -25,8 +25,8 @@
                             <h4 class="card-amount">$<%= product.amount %></h4>
                             <p class="card-description"><%= product.description %></p>
                             <div class="grid-2">
-                                <a href="/products/<%= product.id %>" class="link-product">Details</a>
-                                <form action="/post-cart/<%= product.id %>?currentPage=productList" method="POST">
+                                <a href="/products/<%= product._id %>" class="link-product">Details</a>
+                                <form action="/post-cart/<%= product._id %>?currentPage=productList" method="POST">
                                     <button type="submit" name="action" value="add">Add to Cart</button>
                                 </form>
                             </div>

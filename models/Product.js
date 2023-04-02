@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const mongodb = require('mongodb');
 
 const { sequelize, getDb } = require('../utils/database');
 
@@ -13,6 +14,26 @@ class ProductMongo {
     save() {
         const db = getDb();
         return db.collection('products').insertOne(this);
+    }
+
+    static fetchAll() {
+        const db = getDb();
+        return db.collection('products').find().toArray().then(products => {
+            return products;
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    static findById(id) {
+        const db = getDb();
+        return db.collection('products').find({
+            _id: new mongodb.ObjectId(id)
+        }).next().then(product => {
+            return product;
+        }).catch(error => {
+            console.log(error);
+        })
     }
 }
 

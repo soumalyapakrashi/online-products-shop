@@ -1,7 +1,17 @@
-const { Product } = require( "../models/Product");
+const { Product, ProductMongo } = require( "../models/Product");
 
 function listProductsPage(request, response, next) {
-    Product.findAll().then(products => {
+    // Product.findAll().then(products => {
+    //     response.render('shop/list-product', { 
+    //         pageTitle: 'Products',
+    //         activePage: 'Products',
+    //         products: products
+    //     });
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    ProductMongo.fetchAll().then(products => {
         response.render('shop/list-product', { 
             pageTitle: 'Products',
             activePage: 'Products',
@@ -13,36 +23,48 @@ function listProductsPage(request, response, next) {
 }
 
 function showProductPage(request, response, next) {
+    // // First get the product whose detail needs to be displayed
+    // Product.findByPk(request.params.productId).then(product => {
+    //     // Fetch the cart of the current user. This is used to display the number of
+    //     // current items in cart.
+    //     request.user.getCart().then(cart => {
+    //         // Fetch the current product (to be displayed) from the current user's cart
+    //         return cart.getProducts( { where: { id: product.id } } );
+    //     }).then(cart_products => {
+    //         // The product can either be present or not.
+    //         // If the product is present, get the quantity of the product through the
+    //         // 'cartitem' property that every product fetched through Cart will have.
+    //         // Else, set the quantity to 0.
+    //         let quantity;
+
+    //         if(cart_products.length !== 0) {
+    //             quantity = cart_products[0].cartitem.quantity;
+    //         }
+    //         else {
+    //             quantity = 0;
+    //         }
+
+    //         response.render('shop/product-detail', { 
+    //             pageTitle: product.title, 
+    //             activePage: 'Products', 
+    //             product: product,
+    //             quantity: quantity
+    //         });
+    //     }).catch(error => {
+    //         console.log(error);
+    //     })
+    // }).catch(error => {
+    //     console.log(error);
+    // })
+
     // First get the product whose detail needs to be displayed
-    Product.findByPk(request.params.productId).then(product => {
-        // Fetch the cart of the current user. This is used to display the number of
-        // current items in cart.
-        request.user.getCart().then(cart => {
-            // Fetch the current product (to be displayed) from the current user's cart
-            return cart.getProducts( { where: { id: product.id } } );
-        }).then(cart_products => {
-            // The product can either be present or not.
-            // If the product is present, get the quantity of the product through the
-            // 'cartitem' property that every product fetched through Cart will have.
-            // Else, set the quantity to 0.
-            let quantity;
-
-            if(cart_products.length !== 0) {
-                quantity = cart_products[0].cartitem.quantity;
-            }
-            else {
-                quantity = 0;
-            }
-
-            response.render('shop/product-detail', { 
-                pageTitle: product.title, 
-                activePage: 'Products', 
-                product: product,
-                quantity: quantity
-            });
-        }).catch(error => {
-            console.log(error);
-        })
+    ProductMongo.findById(request.params.productId).then(product => {
+        response.render('shop/product-detail', { 
+            pageTitle: product.title, 
+            activePage: 'Products', 
+            product: product,
+            quantity: 0
+        });
     }).catch(error => {
         console.log(error);
     })
