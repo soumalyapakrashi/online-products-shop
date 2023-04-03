@@ -87,9 +87,15 @@ function postProduct(request, response, next) {
 
 function deleteProduct(request, response, next) {
     const product_id = request.params.productId;
-    Product.findByPk(product_id).then(product => {
-        return product.destroy();
-    }).then(() => {
+    // Product.findByPk(product_id).then(product => {
+    //     return product.destroy();
+    // }).then(() => {
+    //     response.redirect('/admin/products');
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    ProductMongo.deleteById(product_id).then(() => {
         response.redirect('/admin/products');
     }).catch(error => {
         console.log(error);

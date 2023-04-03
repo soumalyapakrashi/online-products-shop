@@ -45,6 +45,11 @@ class ProductMongo {
             console.log(error);
         })
     }
+
+    static deleteById(id) {
+        const db = getDb();
+        return db.collection('products').deleteOne({ _id: new mongodb.ObjectId(id)});
+    }
 }
 
 const Product = sequelize.define('product', {
