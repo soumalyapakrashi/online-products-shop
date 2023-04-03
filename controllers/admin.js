@@ -50,6 +50,7 @@ function editProduct(request, response, next) {
         request.body.picture,
         request.body.amount,
         request.body.description,
+        request.user._id,
         product_id
     );
 
@@ -76,7 +77,8 @@ function postProduct(request, response, next) {
         request.body.title,
         request.body.picture,
         request.body.amount,
-        request.body.description
+        request.body.description,
+        request.user._id
     );
     product.save().then(() => {
         response.redirect('/products');

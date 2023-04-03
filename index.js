@@ -6,7 +6,7 @@ const admin_routes = require('./routes/admin');
 const error_route = require('./routes/error');
 const { sequelize, mongoConnect } = require('./utils/database');
 const { Product } = require('./models/Product');
-const User = require('./models/User');
+const { User, UserMongo } = require('./models/User');
 const Cart = require('./models/Cart');
 const CartItem = require('./models/CartItem');
 const Order = require('./models/Order');
@@ -24,7 +24,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Add the dummy user to the request so that it can be accessed from other parts
 app.use((request, response, next) => {
-    User.findByPk(1).then(user => {
+    // User.findByPk(1).then(user => {
+    //     request.user = user;
+    //     next();
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    UserMongo.findById("642b066945e3834aca674893").then(user => {
         request.user = user;
         next();
     }).catch(error => {

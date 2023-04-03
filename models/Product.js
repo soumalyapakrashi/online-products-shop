@@ -4,11 +4,12 @@ const mongodb = require('mongodb');
 const { sequelize, getDb } = require('../utils/database');
 
 class ProductMongo {
-    constructor(title, picture, amount, description, id = undefined) {
+    constructor(title, picture, amount, description, userid, id = undefined) {
         this.title = title,
         this.picture = picture;
         this.amount = amount;
         this.description = description;
+        this.userid = userid;
         this._id = id === undefined ? id : new mongodb.ObjectId(id);
     }
 
