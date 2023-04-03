@@ -4,16 +4,26 @@ const mongodb = require('mongodb');
 const { sequelize, getDb } = require('../utils/database');
 
 class ProductMongo {
-    constructor(title, picture, amount, description) {
+    constructor(title, picture, amount, description, id = undefined) {
         this.title = title,
         this.picture = picture;
         this.amount = amount;
         this.description = description;
+        this._id = id === undefined ? id : new mongodb.ObjectId(id);
     }
 
     save() {
         const db = getDb();
-        return db.collection('products').insertOne(this);
+
+        if(this._id === undefined) {
+            return db.collection('products').insertOne(this);
+        }
+        else {
+            return db.collection('products').updateOne(
+                { _id: this._id },
+                { $set: this }
+            )
+        }
     }
 
     static fetchAll() {

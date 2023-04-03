@@ -9,7 +9,17 @@ function addProductPage(request, response, next) {
 
 function editProductPage(request, response, next) {
     const product_id = request.params.productId;
-    Product.findByPk(product_id).then(product => {
+    // Product.findByPk(product_id).then(product => {
+    //     response.render('admin/add-product', {
+    //         pageTitle: product.title,
+    //         activePage: 'Edit Product',
+    //         product: product
+    //     });
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    ProductMongo.findById(product_id).then(product => {
         response.render('admin/add-product', {
             pageTitle: product.title,
             activePage: 'Edit Product',
@@ -17,23 +27,37 @@ function editProductPage(request, response, next) {
         });
     }).catch(error => {
         console.log(error);
-    })
+    });
 }
 
 function editProduct(request, response, next) {
     const product_id = request.params.productId;
     
-    Product.findByPk(product_id).then(product => {
-        product.title = request.body.title;
-        product.picture = request.body.picture;
-        product.amount = request.body.amount;
-        product.description = request.body.description;
-        return product.save();
-    }).then(() => {
+    // Product.findByPk(product_id).then(product => {
+    //     product.title = request.body.title;
+    //     product.picture = request.body.picture;
+    //     product.amount = request.body.amount;
+    //     product.description = request.body.description;
+    //     return product.save();
+    // }).then(() => {
+    //     response.redirect('/admin/products');
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+
+    const updated_product = new ProductMongo(
+        request.body.title,
+        request.body.picture,
+        request.body.amount,
+        request.body.description,
+        product_id
+    );
+
+    updated_product.save().then(() => {
         response.redirect('/admin/products');
     }).catch(error => {
         console.log(error);
-    })
+    });
 }
 
 function postProduct(request, response, next) {
