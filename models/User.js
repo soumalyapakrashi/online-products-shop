@@ -81,6 +81,30 @@ class UserMongo {
             console.log(error);
         });
     }
+
+    deleteProductFromCart(product_id) {
+        const remaining_products = this.cart.items.filter(item => {
+            return item._id.toString() !== product_id;
+        })
+
+        this.cart.items = remaining_products;
+
+        const db = getDb();
+        return db.collection('users').updateOne(
+            { _id: new mongodb.ObjectId(this._id) },
+            { $set: {
+                cart: this.cart
+            }}
+        );
+    }
+
+    getQuantity(product_id) {
+        const found_product = this.cart.items.find(item => {
+            return item._id.toString() === product_id;
+        });
+
+        return found_product?.quantity ? found_product.quantity : 0;
+    }
 }
 
 module.exports = {

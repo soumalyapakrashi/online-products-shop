@@ -59,11 +59,13 @@ function showProductPage(request, response, next) {
 
     // First get the product whose detail needs to be displayed
     ProductMongo.findById(request.params.productId).then(product => {
+        const quantity = request.user.getQuantity(request.params.productId);
+
         response.render('shop/product-detail', { 
             pageTitle: product.title, 
             activePage: 'Products', 
             product: product,
-            quantity: 0
+            quantity: quantity
         });
     }).catch(error => {
         console.log(error);
@@ -174,26 +176,49 @@ function postToCart(request, response, next) {
 
     // If deleting from cart, delete a single instance of the product
     else if(action === "delete") {
-        // First, get the cart from which the product is to be deleted
-        request.user.getCart().then(cart => {
-            // Then get the desired product whose single instance is to be deleted
-            cart.getProducts({ where: { id: product_id } }).then(products => {
-                // Set the new quantity
-                const new_quantity = products[0].cartitem.quantity - 1;
-                // If more than 1 instance of the product is left in cart after updation, then just
-                // update the product in the cart.
-                if(new_quantity > 0) {
-                    return cart.addProduct(products[0], { through: { quantity: new_quantity } });
-                }
-                // Else if no instance is left, delete the product from the cart.
-                // NOTE: Do not call destroy() on the product as it will delete the whole product
-                // itself from the products table. Call the destroy() method on the cartitem
-                // property of the product which will just delete the entry in the cartitems table
-                // and essentially it will signify that the product is deleted from the
-                // respective user's cart.
-                else {
-                    return products[0].cartitem.destroy();
-                }
+        // // First, get the cart from which the product is to be deleted
+        // request.user.getCart().then(cart => {
+        //     // Then get the desired product whose single instance is to be deleted
+        //     cart.getProducts({ where: { id: product_id } }).then(products => {
+        //         // Set the new quantity
+        //         const new_quantity = products[0].cartitem.quantity - 1;
+        //         // If more than 1 instance of the product is left in cart after updation, then just
+        //         // update the product in the cart.
+        //         if(new_quantity > 0) {
+        //             return cart.addProduct(products[0], { through: { quantity: new_quantity } });
+        //         }
+        //         // Else if no instance is left, delete the product from the cart.
+        //         // NOTE: Do not call destroy() on the product as it will delete the whole product
+        //         // itself from the products table. Call the destroy() method on the cartitem
+        //         // property of the product which will just delete the entry in the cartitems table
+        //         // and essentially it will signify that the product is deleted from the
+        //         // respective user's cart.
+        //         else {
+        //             return products[0].cartitem.destroy();
+        //         }
+        //     }).then(() => {
+        //         // After updation, redirect to appropriate page
+        //         if(current_page === 'productDetail') {
+        //             response.redirect(`/products/${product_id}`);
+        //         }
+        //         else {
+        //             response.redirect('/products');
+        //         }
+        //     }).catch(error => {
+        //         console.log(error);
+        //     })
+        // }).catch(error => {
+        //     console.log(error);
+        // })
+
+        const index = request.user.cart.items.findIndex(item => {
+            return item._id.toString() === product_id;
+        });
+        request.user.cart.items[index].quantity -= 1;
+
+        if(request.user.cart.items[index].quantity === 0) {
+            request.user.deleteProductFromCart(product_id).then(() => {
+                return request.user.save();
             }).then(() => {
                 // After updation, redirect to appropriate page
                 if(current_page === 'productDetail') {
@@ -204,28 +229,45 @@ function postToCart(request, response, next) {
                 }
             }).catch(error => {
                 console.log(error);
-            })
-        }).catch(error => {
-            console.log(error);
-        })
+            });
+        }
+        else {
+            request.user.save().then(() => {
+                // After updation, redirect to appropriate page
+                if(current_page === 'productDetail') {
+                    response.redirect(`/products/${product_id}`);
+                }
+                else {
+                    response.redirect('/products');
+                }
+            });
+        }
     }
 }
 
 function deleteFromCart(request, response, next) {
     const product_id = request.params.productId;
-    // First get the current user's cart from which product is to be deleted
-    request.user.getCart().then(cart => {
-        // Then get the product which is to be deleted
-        return cart.getProducts({ where: { id: product_id } });
-    }).then(products => {
-        // As we have passed an id, we know that only 1 instance of the product will
-        // be returned. So, delete the first product from the list. This will delete the
-        // product from the cartitems table.
-        return products[0].cartitem.destroy();
-    }).then(() => {
+    // MySQL Implementation
+    // // First get the current user's cart from which product is to be deleted
+    // request.user.getCart().then(cart => {
+    //     // Then get the product which is to be deleted
+    //     return cart.getProducts({ where: { id: product_id } });
+    // }).then(products => {
+    //     // As we have passed an id, we know that only 1 instance of the product will
+    //     // be returned. So, delete the first product from the list. This will delete the
+    //     // product from the cartitems table.
+    //     return products[0].cartitem.destroy();
+    // }).then(() => {
+    //     response.redirect('/cart');
+    // }).catch(errors => {
+    //     console.log(errors);
+    // })
+
+    // MongoDB Implementation
+    request.user.deleteProductFromCart(product_id).then(() => {
         response.redirect('/cart');
-    }).catch(errors => {
-        console.log(errors);
+    }).catch(error => {
+        console.log(error);
     })
 }
 
