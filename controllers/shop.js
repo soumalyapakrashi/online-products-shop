@@ -77,56 +77,96 @@ function postToCart(request, response, next) {
 
     // If adding to cart, add a single instance of the product to cart
     if(action === 'add') {
-        let user_cart;
-        let product_to_add;
+        // MySQL implementation
+        // let user_cart;
+        // let product_to_add;
         
+        // // Get the product to be added
+        // Product.findByPk(product_id).then(product => {
+        //     product_to_add = product;
+
+        //     // Get the cart of the current user (to which the product is to be added).
+        //     return request.user.getCart();
+        // }).then(cart => {
+        //     user_cart = cart;
+
+        //     // Check if product exists in cart.
+        //     return cart.getProducts({
+        //         where: {
+        //             id: product_id
+        //         }
+        //     })
+        // }).then(products => {
+        //     // If product not in cart, add it and set quantity to 1.
+        //     if(products.length === 0) {
+        //         user_cart.addProduct(product_to_add, { through: { quantity: 1 } }).then(() => {
+        //             // Once product is added, redirect to page
+        //             if(current_page === 'productDetail') {
+        //                 response.redirect(`/products/${product_id}`);
+        //             }
+        //             else {
+        //                 response.redirect('/products');
+        //             }
+        //         }).catch(error => {
+        //             console.log(error);
+        //         })
+        //     }
+        //     // If product exists in cart, then update the quantity by increasing it by 1.
+        //     // Adding the same product to cart with a new quantity value will automatically
+        //     // update the previous value and will not create a new entry in the table.
+        //     else {
+        //         const new_quantity = products[0].cartitem.quantity + 1;
+        //         user_cart.addProduct(products[0], { through: { quantity: new_quantity }}).then(() => {
+        //             // Once quantity is updated, redirect to page
+        //             if(current_page === 'productDetail') {
+        //                 response.redirect(`/products/${product_id}`);
+        //             }
+        //             else {
+        //                 response.redirect('/products');
+        //             }
+        //         }).catch(error => {
+        //             console.log(error);
+        //         })
+        //     }
+        // }).catch(error => {
+        //     console.log(error);
+        // })
+
+        
+        // MongoDB implementation
+        // Get the products already in cart
+        let { items: cart_products } = request.user.cart;
+
         // Get the product to be added
-        Product.findByPk(product_id).then(product => {
-            product_to_add = product;
+        ProductMongo.findById(product_id).then(product => {
+            const product_index = cart_products.findIndex(cart_product => {
+                return cart_product._id.toString() == product._id.toString();
+            });
 
-            // Get the cart of the current user (to which the product is to be added).
-            return request.user.getCart();
-        }).then(cart => {
-            user_cart = cart;
-
-            // Check if product exists in cart.
-            return cart.getProducts({
-                where: {
-                    id: product_id
-                }
-            })
-        }).then(products => {
-            // If product not in cart, add it and set quantity to 1.
-            if(products.length === 0) {
-                user_cart.addProduct(product_to_add, { through: { quantity: 1 } }).then(() => {
-                    // Once product is added, redirect to page
-                    if(current_page === 'productDetail') {
-                        response.redirect(`/products/${product_id}`);
-                    }
-                    else {
-                        response.redirect('/products');
-                    }
-                }).catch(error => {
-                    console.log(error);
-                })
+            // If product is not found in cart, then add it and set quantity to 1
+            if(product_index === -1) {
+                cart_products.push({
+                    _id: product._id,
+                    quantity: 1
+                });
             }
-            // If product exists in cart, then update the quantity by increasing it by 1.
-            // Adding the same product to cart with a new quantity value will automatically
-            // update the previous value and will not create a new entry in the table.
+            // Else if product is found in cart, then increase the quantity
             else {
-                const new_quantity = products[0].cartitem.quantity + 1;
-                user_cart.addProduct(products[0], { through: { quantity: new_quantity }}).then(() => {
-                    // Once quantity is updated, redirect to page
-                    if(current_page === 'productDetail') {
-                        response.redirect(`/products/${product_id}`);
-                    }
-                    else {
-                        response.redirect('/products');
-                    }
-                }).catch(error => {
-                    console.log(error);
-                })
+                cart_products[product_index].quantity += 1;
             }
+
+            // Save the updated cart
+            request.user.save().then(() => {
+                // Once product is added, redirect to page
+                if(current_page === 'productDetail') {
+                    response.redirect(`/products/${product_id}`);
+                }
+                else {
+                    response.redirect('/products');
+                }
+            }).catch(error => {
+                console.log(error);
+            });
         }).catch(error => {
             console.log(error);
         })
@@ -190,13 +230,38 @@ function deleteFromCart(request, response, next) {
 }
 
 function showCartPage(request, response, next) {
-    request.user.getCart().then(cart => {
-        return cart.getProducts();
-    }).then(products => {
+    // MySQL Implementation
+    // request.user.getCart().then(cart => {
+    //     return cart.getProducts();
+    // }).then(products => {
+    //     // Calculate total amount, taxes, and gross amount
+    //     let total_amount = 0;
+    //     for(let product of products) {
+    //         total_amount += product.amount * product.cartitem.quantity;
+    //     }
+    //     // If some product is present, then add the tax. Else not.
+    //     const tax = total_amount > 0 ? 10 : 0;
+    //     const gross_amount = total_amount + tax;
+
+    //     response.render('shop/cart', { 
+    //         pageTitle: 'Cart',
+    //         activePage: 'Cart',
+    //         cart: products,
+    //         totalAmount: total_amount,
+    //         tax: tax,
+    //         grossAmount: gross_amount
+    //     });
+    // }).catch(error => {
+    //     console.log(error);
+    // })
+
+    // MongoDB Implementation
+    request.user.getCart().then(products => {
+        // console.log("Products", products);
         // Calculate total amount, taxes, and gross amount
         let total_amount = 0;
         for(let product of products) {
-            total_amount += product.amount * product.cartitem.quantity;
+            total_amount += product.amount * product.quantity;
         }
         // If some product is present, then add the tax. Else not.
         const tax = total_amount > 0 ? 10 : 0;
@@ -210,9 +275,7 @@ function showCartPage(request, response, next) {
             tax: tax,
             grossAmount: gross_amount
         });
-    }).catch(error => {
-        console.log(error);
-    })
+    });
 }
 
 function showCheckoutPage(request, response, next) {

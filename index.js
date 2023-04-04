@@ -32,7 +32,7 @@ app.use((request, response, next) => {
     // });
 
     UserMongo.findById("642b066945e3834aca674893").then(user => {
-        request.user = user;
+        request.user = new UserMongo(user.name, user.email, user.cart, user._id.toString());
         next();
     }).catch(error => {
         console.log(error);

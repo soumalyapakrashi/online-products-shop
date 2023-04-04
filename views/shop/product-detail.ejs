@@ -13,7 +13,7 @@
             <h4 class="product-amount">$<%= product.amount %></h4>
             <p class="product-description"><%= product.description %></p>
         
-            <form action="/post-cart/<%= product.id %>?currentPage=productDetail" method="POST">
+            <form action="/post-cart/<%= product._id %>?currentPage=productDetail" method="POST">
                 <div class="product-instances-in-cart">
                     <p><i><%= quantity %> units of this item in cart</i></p>
                 </div>
