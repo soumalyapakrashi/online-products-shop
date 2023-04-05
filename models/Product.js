@@ -9,7 +9,7 @@ class ProductMongo {
         this.picture = picture;
         this.amount = amount;
         this.description = description;
-        this.userid = userid;
+        this.userid = new mongodb.ObjectId(userid);
         this._id = id === undefined ? id : new mongodb.ObjectId(id);
     }
 
