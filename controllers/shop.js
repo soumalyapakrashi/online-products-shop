@@ -321,73 +321,122 @@ function showCartPage(request, response, next) {
 }
 
 function showCheckoutPage(request, response, next) {
-    request.user.getCart().then(cart => {
-        return cart.getProducts();
-    }).then(products => {
+    // request.user.getCart().then(cart => {
+    //     return cart.getProducts();
+    // }).then(products => {
+    //     // Calculate total amount, taxes, and gross amount
+    //     let total_amount = 0;
+    //     for(let product of products) {
+    //         total_amount += product.amount * product.cartitem.quantity;
+    //     }
+    //     // If some product is present, then add the tax. Else not.
+    //     const tax = total_amount > 0 ? 10 : 0;
+    //     const gross_amount = total_amount + tax;
+
+    //     response.render('shop/checkout', {
+    //         pageTitle: 'Checkout',
+    //         activePage: 'Cart',
+    //         cart: products,
+    //         totalAmount: total_amount,
+    //         tax: tax,
+    //         grossAmount: gross_amount
+    //     });
+    // })
+
+    request.user.getCart().then(products => {
+        // console.log("Products", products);
         // Calculate total amount, taxes, and gross amount
         let total_amount = 0;
         for(let product of products) {
-            total_amount += product.amount * product.cartitem.quantity;
+            total_amount += product.amount * product.quantity;
         }
         // If some product is present, then add the tax. Else not.
         const tax = total_amount > 0 ? 10 : 0;
         const gross_amount = total_amount + tax;
 
-        response.render('shop/checkout', {
-            pageTitle: 'Checkout',
+        response.render('shop/checkout', { 
+            pageTitle: 'Cart',
             activePage: 'Cart',
             cart: products,
             totalAmount: total_amount,
             tax: tax,
             grossAmount: gross_amount
         });
-    })
+    });
 }
 
 function placeOrder(request, response, next) {
-    // First get the current user's cart
-    let user_cart;
-    request.user.getCart().then(cart => {
-        user_cart = cart;
-        // Then get all the products in the cart
-        return cart.getProducts();
-    }).then(products => {
-        // Create a new order for the current user
-        return request.user.createOrder().then(order => {
-            // Add the products currently in cart to the newly created order.
-            // But as each product has different quantities to be added, we add a new field
-            // to the product object with which sequelize will update the joining table properly.
-            return order.addProducts(products.map(product => {
-                // This will help to update the joining table properly.
-                // Sequelize will look for 'orderitem' property as this is the name of the
-                // joining table. We set the 'quantity' property in this table.
-                product.orderitem = {
-                    quantity: product.cartitem.quantity
-                }
-                return product;
-            }));
-        }).catch(errors => {
-            console.log(errors);
-        })
-    }).then(() => {
-        // Then clear the cart as items has already been added to the order
-        return user_cart.setProducts(null);
-    }).then(() => {
+    // // First get the current user's cart
+    // let user_cart;
+    // request.user.getCart().then(cart => {
+    //     user_cart = cart;
+    //     // Then get all the products in the cart
+    //     return cart.getProducts();
+    // }).then(products => {
+    //     // Create a new order for the current user
+    //     return request.user.createOrder().then(order => {
+    //         // Add the products currently in cart to the newly created order.
+    //         // But as each product has different quantities to be added, we add a new field
+    //         // to the product object with which sequelize will update the joining table properly.
+    //         return order.addProducts(products.map(product => {
+    //             // This will help to update the joining table properly.
+    //             // Sequelize will look for 'orderitem' property as this is the name of the
+    //             // joining table. We set the 'quantity' property in this table.
+    //             product.orderitem = {
+    //                 quantity: product.cartitem.quantity
+    //             }
+    //             return product;
+    //         }));
+    //     }).catch(errors => {
+    //         console.log(errors);
+    //     })
+    // }).then(() => {
+    //     // Then clear the cart as items has already been added to the order
+    //     return user_cart.setProducts(null);
+    // }).then(() => {
+    //     response.redirect('/orders');
+    // }).catch(errors => {
+    //     console.log(errors);
+    // })
+
+    // MongoDB Implementation
+    request.user.createOrder().then(() => {
         response.redirect('/orders');
-    }).catch(errors => {
-        console.log(errors);
+    }).catch(error => {
+        console.log(error);
     })
 }
 
 function showOrdersPage(request, response, next) {
     // Get all the orders for the current user. We are 'Eager Loading' the Products as well
     // with the orders. Each order object will also have the products contained within that order.
-    request.user.getOrders({ include: Product }).then(orders => {
+    // request.user.getOrders({ include: Product }).then(orders => {
+    //     for(let order of orders) {
+    //         // Calculate the total amount of all the products in the order
+    //         let total_amount = 0;
+    //         for(let product of order.products) {
+    //             total_amount += product.amount * product.orderitem.quantity;
+    //         }
+    //         order.totalAmount = total_amount;
+    //         // Set the picture of the order to be the first product which we get.
+    //         // This is arbitrary and not for any reason!
+    //         order.picture = order.products[0].picture;
+    //     }
+    //     response.render('shop/order', {
+    //         pageTitle: 'Orders',
+    //         activePage: 'Orders',
+    //         orders: orders
+    //     })
+    // }).catch(error => {
+    //     console.log(error);
+    // })
+
+    request.user.getOrders().then(orders => {
         for(let order of orders) {
             // Calculate the total amount of all the products in the order
             let total_amount = 0;
             for(let product of order.products) {
-                total_amount += product.amount * product.orderitem.quantity;
+                total_amount += product.amount * product.quantity;
             }
             order.totalAmount = total_amount;
             // Set the picture of the order to be the first product which we get.

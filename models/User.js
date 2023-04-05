@@ -105,6 +105,43 @@ class UserMongo {
 
         return found_product?.quantity ? found_product.quantity : 0;
     }
+
+    createOrder() {
+        const db = getDb();
+
+        // Get the products from the cart
+        return this.getCart().then(products => {
+            // Create an order object. This order object should contain the products currently
+            // in cart along with the current user's userid.
+            const order = {
+                userid: new mongodb.ObjectId(this._id),
+                createdAt: new Date().toLocaleString(),
+                products: products
+            };
+
+            // Add the order to the orders collection
+            return db.collection('orders').insertOne(order);
+        }).then(() => {
+            // On successfully entering the order in database, clear the local and
+            // database copies of the cart
+            this.cart = { items: [] };
+
+            return db.collection('users').updateOne(
+                { _id: new mongodb.ObjectId(this._id) },
+                { $set: {
+                    cart: this.cart
+                }}
+            );
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    getOrders() {
+        const db = getDb();
+
+        return db.collection('orders').find({ userid: new mongodb.ObjectId(this._id) }).toArray();
+    }
 }
 
 module.exports = {

@@ -18,7 +18,7 @@
                         <img src="<%= order.picture %>" alt="<%= order.id %>" class="cart-item-image">
                         <div class="item-description">
                             <div>
-                                <h2>Order Number: <%= order.id %></h2>
+                                <h2>Order Number: <%= order._id.toString() %></h2>
                                 <h4>Order Date: <%= order.createdAt %></h4>
                             </div>
                         </div>
