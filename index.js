@@ -1,5 +1,11 @@
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+require('dotenv').config({
+    path: path.resolve(__dirname, '..', '.env')
+});
 
 const shop_routes = require('./routes/shop');
 const admin_routes = require('./routes/admin');
@@ -34,7 +40,7 @@ app.use(shop_routes);
 app.use(error_route);
 
 // Connect to MongoDB and on successful connection, start the server.
-mongoConnect().then(client => {
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.rys2m9o.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`).then(client => {
     app.listen(3000);
 }).catch(error => {
     console.log(error);
