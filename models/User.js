@@ -1,27 +1,8 @@
-const Sequelize = require('sequelize');
 const mongodb = require('mongodb');
 
-const { sequelize, getDb } = require('../utils/database');
+const { getDb } = require('../utils/database');
 
-const User = sequelize.define('user', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    name: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-    }
-});
-
-class UserMongo {
+class User {
     constructor(name, email, cart = undefined, _id = undefined) {
         this.name = name;
         this.email = email;
@@ -145,6 +126,5 @@ class UserMongo {
 }
 
 module.exports = {
-    User: User,
-    UserMongo: UserMongo
+    User: User
 };

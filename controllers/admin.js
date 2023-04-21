@@ -1,4 +1,4 @@
-const { Product, ProductMongo } = require( "../models/Product");
+const { Product } = require( "../models/Product");
 
 function addProductPage(request, response, next) {
     response.render('admin/add-product', { 
@@ -9,17 +9,8 @@ function addProductPage(request, response, next) {
 
 function editProductPage(request, response, next) {
     const product_id = request.params.productId;
-    // Product.findByPk(product_id).then(product => {
-    //     response.render('admin/add-product', {
-    //         pageTitle: product.title,
-    //         activePage: 'Edit Product',
-    //         product: product
-    //     });
-    // }).catch(error => {
-    //     console.log(error);
-    // });
 
-    ProductMongo.findById(product_id).then(product => {
+    Product.findById(product_id).then(product => {
         response.render('admin/add-product', {
             pageTitle: product.title,
             activePage: 'Edit Product',
@@ -32,20 +23,8 @@ function editProductPage(request, response, next) {
 
 function editProduct(request, response, next) {
     const product_id = request.params.productId;
-    
-    // Product.findByPk(product_id).then(product => {
-    //     product.title = request.body.title;
-    //     product.picture = request.body.picture;
-    //     product.amount = request.body.amount;
-    //     product.description = request.body.description;
-    //     return product.save();
-    // }).then(() => {
-    //     response.redirect('/admin/products');
-    // }).catch(error => {
-    //     console.log(error);
-    // });
 
-    const updated_product = new ProductMongo(
+    const updated_product = new Product(
         request.body.title,
         request.body.picture,
         request.body.amount,
@@ -62,18 +41,7 @@ function editProduct(request, response, next) {
 }
 
 function postProduct(request, response, next) {
-    // request.user.createProduct({
-    //     title: request.body.title,
-    //     picture: request.body.picture,
-    //     amount: request.body.amount,
-    //     description: request.body.description
-    // }).then(product => {
-    //     response.redirect('/products');
-    // }).catch(error => {
-    //     console.log(error);
-    // })
-
-    const product = new ProductMongo(
+    const product = new Product(
         request.body.title,
         request.body.picture,
         request.body.amount,
@@ -89,15 +57,8 @@ function postProduct(request, response, next) {
 
 function deleteProduct(request, response, next) {
     const product_id = request.params.productId;
-    // Product.findByPk(product_id).then(product => {
-    //     return product.destroy();
-    // }).then(() => {
-    //     response.redirect('/admin/products');
-    // }).catch(error => {
-    //     console.log(error);
-    // });
 
-    ProductMongo.deleteById(product_id).then(() => {
+    Product.deleteById(product_id).then(() => {
         response.redirect('/admin/products');
     }).catch(error => {
         console.log(error);
@@ -105,17 +66,7 @@ function deleteProduct(request, response, next) {
 }
 
 function listProductPage(request, response, next) {
-    // Product.findAll().then(products => {
-    //     response.render('admin/list-product', {
-    //         pageTitle: 'Admin Products',
-    //         activePage: 'Admin Products',
-    //         products: products
-    //     });
-    // }).catch(error => {
-    //     console.log(error);
-    // });
-
-    ProductMongo.fetchAll().then(products => {
+    Product.fetchAll().then(products => {
         response.render('admin/list-product', {
             pageTitle: 'Admin Products',
             activePage: 'Admin Products',
