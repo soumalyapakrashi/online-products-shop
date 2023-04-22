@@ -10,7 +10,6 @@ require('dotenv').config({
 const shop_routes = require('./routes/shop');
 const admin_routes = require('./routes/admin');
 const error_route = require('./routes/error');
-const { mongoConnect } = require('./utils/database');
 const { User } = require('./models/User');
 
 const app = express();
@@ -25,12 +24,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Add the dummy user to the request so that it can be accessed from other parts
 app.use((request, response, next) => {
-    User.findById("642b066945e3834aca674893").then(user => {
-        request.user = new User(user.name, user.email, user.cart, user._id.toString());
-        next();
-    }).catch(error => {
-        console.log(error);
-    })
+    // User.findById("642b066945e3834aca674893").then(user => {
+    //     request.user = new User(user.name, user.email, user.cart, user._id.toString());
+    //     next();
+    // }).catch(error => {
+    //     console.log(error);
+    // })
+    next();
 })
 
 app.use('/admin', admin_routes);

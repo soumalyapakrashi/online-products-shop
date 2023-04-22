@@ -1,7 +1,7 @@
-const { Product } = require( "../models/Product");
+const Product = require( "../models/Product");
 
 function listProductsPage(request, response, next) {
-    Product.fetchAll().then(products => {
+    Product.find().then(products => {
         response.render('shop/list-product', { 
             pageTitle: 'Products',
             activePage: 'Products',
@@ -15,13 +15,13 @@ function listProductsPage(request, response, next) {
 function showProductPage(request, response, next) {
     // First get the product whose detail needs to be displayed
     Product.findById(request.params.productId).then(product => {
-        const quantity = request.user.getQuantity(request.params.productId);
+        // const quantity = request.user.getQuantity(request.params.productId);
 
         response.render('shop/product-detail', { 
             pageTitle: product.title, 
             activePage: 'Products', 
             product: product,
-            quantity: quantity
+            quantity: 0
         });
     }).catch(error => {
         console.log(error);
