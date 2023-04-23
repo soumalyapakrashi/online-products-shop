@@ -29,6 +29,56 @@ const UserSchema = new Schema({
     }
 });
 
+// Function to add / update user cart
+UserSchema.methods.addToCart = function(product) {
+    const product_index = this.cart.items.findIndex(cart_product => {
+        return cart_product.productId.toString() == product._id.toString();
+    });
+
+    // If product is not found in cart, then add it and set quantity to 1
+    if(product_index === -1) {
+        this.cart.items.push({
+            productId: product._id,
+            quantity: 1
+        });
+    }
+    // Else if product is found in cart, then increase the quantity
+    else {
+        this.cart.items[product_index].quantity += 1;
+    }
+
+    return this.save();
+}
+
+// Function to delete product from user cart
+UserSchema.methods.deleteProductFromCart = function(productId) {
+    const remaining_products = this.cart.items.filter(item => {
+        return item.productId.toString() !== productId;
+    })
+
+    this.cart.items = remaining_products;
+
+    return this.save();
+}
+
+// Function to return user cart populated with products
+UserSchema.methods.getCart = function() {
+    return this.populate('cart.items.productId').then(user_object => {
+        // Extract the populated products from user object
+        const products = user_object.cart.items.map(item => {
+            // console.log(item);
+            return {
+                ...item.productId._doc,
+                quantity: item.quantity
+            };
+        })
+
+        return products;
+    }).catch(error => {
+        throw error;
+    })
+}
+
 module.exports = mongoose.model('User', UserSchema);
 
 // class User {
