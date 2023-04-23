@@ -43,7 +43,8 @@ function postProduct(request, response, next) {
         title: request.body.title,
         picture: request.body.picture,
         amount: request.body.amount,
-        description: request.body.description
+        description: request.body.description,
+        userId: request.user
     });
     product.save().then(() => {
         response.redirect('/products');
