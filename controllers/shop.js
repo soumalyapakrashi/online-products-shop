@@ -1,5 +1,4 @@
 const Product = require( "../models/Product");
-const User = require("../models/User");
 
 function listProductsPage(request, response, next) {
     Product.find().then(products => {
