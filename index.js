@@ -3,6 +3,9 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+
 require('dotenv').config({
     path: path.resolve(__dirname, '.', '.env')
 });
@@ -15,8 +18,15 @@ const User = require('./models/User');
 
 const app = express();
 
+// Setup the view engine and the views route
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
+// Setup MongoDB Store with sessions
+const store = MongoDBStore({
+    uri: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.rys2m9o.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`,
+    collection: 'sessions'
+});
 
 // Set the public folder to be the folder for static files
 app.use(express.static('./public'));
@@ -32,6 +42,14 @@ app.use((request, response, next) => {
         console.log(error);
     })
 })
+
+// Set up middleware to initialize sessions for user
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: store
+}));
 
 app.use('/admin', admin_routes);
 app.use(shop_routes);

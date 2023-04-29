@@ -6,6 +6,7 @@ function getLoginPage(request, response, next) {
 }
 
 function postLogin(request, response, next) {
+    request.session.isLoggedIn = true;
     response.redirect('/products');
 }
 
