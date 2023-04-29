@@ -9,6 +9,7 @@ require('dotenv').config({
 
 const shop_routes = require('./routes/shop');
 const admin_routes = require('./routes/admin');
+const auth_routes = require('./routes/authentication');
 const error_route = require('./routes/error');
 const User = require('./models/User');
 
@@ -34,6 +35,7 @@ app.use((request, response, next) => {
 
 app.use('/admin', admin_routes);
 app.use(shop_routes);
+app.use(auth_routes);
 
 // Default Not Found route
 app.use(error_route);

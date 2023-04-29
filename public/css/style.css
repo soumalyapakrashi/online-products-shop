@@ -10,6 +10,8 @@ nav {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    justify-content: space-between;
+    padding: 0px 20px;
 }
 
 nav a {
@@ -21,10 +23,6 @@ nav a {
 nav li {
     display: inline-block;
     padding: 0px 10px;
-}
-
-nav ul {
-    margin-left: 20px;
 }
 
 .nav-active {
