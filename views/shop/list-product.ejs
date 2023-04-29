@@ -27,7 +27,11 @@
                             <div class="grid-2">
                                 <a href="/products/<%= product._id %>" class="link-product">Details</a>
                                 <form action="/post-cart/<%= product._id %>?currentPage=productList" method="POST">
-                                    <button type="submit" name="action" value="add">Add to Cart</button>
+                                    <% if(isAuthenticated === true) { %>
+                                        <button type="submit" name="action" value="add">Add to Cart</button>
+                                    <% } else { %>
+                                        <button type="submit" name="action" value="add" disabled>Add to Cart</button>
+                                    <% } %>
                                 </form>
                             </div>
                         </div>

@@ -9,7 +9,9 @@
     <%- include('../partials/navbar') %>
 
     <div class="container">
-        <% if(orders.length === 0) { %>
+        <% if(isAuthenticated === false) { %>
+            <h2>You need to be logged in to access Orders</h2>
+        <% } else if(orders.length === 0) { %>
             <h2>No Orders Placed</h2>
         <% } else { %>
             <div class="cart-items">

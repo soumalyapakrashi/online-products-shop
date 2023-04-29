@@ -28,21 +28,6 @@ const store = MongoDBStore({
     collection: 'sessions'
 });
 
-// Set the public folder to be the folder for static files
-app.use(express.static('./public'));
-// Set up the body parser for parsing forms
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// Add the dummy user to the request so that it can be accessed from other parts
-app.use((request, response, next) => {
-    User.findById("6443f893dc29d298c612a5ee").then(user => {
-        request.user = user;
-        next();
-    }).catch(error => {
-        console.log(error);
-    })
-})
-
 // Set up middleware to initialize sessions for user
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -50,6 +35,27 @@ app.use(session({
     saveUninitialized: false,
     store: store
 }));
+
+// Set the public folder to be the folder for static files
+app.use(express.static('./public'));
+
+// Set up the body parser for parsing forms
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Add the logged in user to the request so that it can be accessed from other parts
+app.use((request, response, next) => {
+    if(request.session.email !== undefined) {
+        User.find({ email: request.session.email }).then(users => {
+            request.user = users[0];
+            next();
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+    else {
+        next();
+    }
+})
 
 app.use('/admin', admin_routes);
 app.use(shop_routes);

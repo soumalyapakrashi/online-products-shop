@@ -1,12 +1,13 @@
 function getLoginPage(request, response, next) {
     response.render('authentication/login', {
         pageTitle: 'Login',
-        activePage: 'Login'
+        activePage: 'Login',
+        isAuthenticated: request.user ? true : false
     });
 }
 
 function postLogin(request, response, next) {
-    request.session.isLoggedIn = true;
+    request.session.email = request.body.email;
     response.redirect('/products');
 }
 

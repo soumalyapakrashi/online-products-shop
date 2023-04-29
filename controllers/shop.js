@@ -5,7 +5,10 @@ function listProductsPage(request, response, next) {
         response.render('shop/list-product', { 
             pageTitle: 'Products',
             activePage: 'Products',
-            products: products
+            products: products,
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         });
     }).catch(error => {
         console.log(error);
@@ -15,15 +18,21 @@ function listProductsPage(request, response, next) {
 function showProductPage(request, response, next) {
     // First get the product whose detail needs to be displayed
     Product.findById(request.params.productId).then(product => {
-        const quantity = request.user.cart.items.find(cart_item => {
-            return cart_item.productId.toString() === product._id.toString();
-        })?.quantity;
+        let quantity = undefined;
+        if(request.user) {
+            quantity = request.user.cart.items.find(cart_item => {
+                return cart_item.productId.toString() === product._id.toString();
+            })?.quantity;
+        }
 
         response.render('shop/product-detail', { 
             pageTitle: product.title, 
             activePage: 'Products', 
             product: product,
-            quantity: quantity === undefined ? 0 : quantity
+            quantity: quantity === undefined ? 0 : quantity,
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         });
     }).catch(error => {
         console.log(error);
@@ -99,25 +108,39 @@ function deleteFromCart(request, response, next) {
 }
 
 function showCartPage(request, response, next) {
-    request.user.getCart().then(products => {
-        // Calculate total amount, taxes, and gross amount
-        let total_amount = 0;
-        for(let product of products) {
-            total_amount += product.amount * product.quantity;
-        }
-        // If some product is present, then add the tax. Else not.
-        const tax = total_amount > 0 ? 10 : 0;
-        const gross_amount = total_amount + tax;
-
+    if(request.user) {
+        request.user.getCart().then(products => {
+            // Calculate total amount, taxes, and gross amount
+            let total_amount = 0;
+            for(let product of products) {
+                total_amount += product.amount * product.quantity;
+            }
+            // If some product is present, then add the tax. Else not.
+            const tax = total_amount > 0 ? 10 : 0;
+            const gross_amount = total_amount + tax;
+    
+            response.render('shop/cart', { 
+                pageTitle: 'Cart',
+                activePage: 'Cart',
+                cart: products,
+                totalAmount: total_amount,
+                tax: tax,
+                grossAmount: gross_amount,
+                isAuthenticated: request.user ? true : false,
+                loggedInUsername: request.user ? request.user.name : undefined,
+                isAdminUser: true
+            });
+        });
+    }
+    else {
         response.render('shop/cart', { 
             pageTitle: 'Cart',
             activePage: 'Cart',
-            cart: products,
-            totalAmount: total_amount,
-            tax: tax,
-            grossAmount: gross_amount
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         });
-    });
+    }
 }
 
 function showCheckoutPage(request, response, next) {
@@ -137,7 +160,10 @@ function showCheckoutPage(request, response, next) {
             cart: products,
             totalAmount: total_amount,
             tax: tax,
-            grossAmount: gross_amount
+            grossAmount: gross_amount,
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         });
     });
 }
@@ -151,26 +177,40 @@ function placeOrder(request, response, next) {
 }
 
 function showOrdersPage(request, response, next) {
-    request.user.getOrders().then(orders => {
-        for(let order of orders) {
-            // Calculate the total amount of all the products in the order
-            let total_amount = 0;
-            for(let product of order.products) {
-                total_amount += product.amount * product.quantity;
+    if(request.user) {
+        request.user.getOrders().then(orders => {
+            for(let order of orders) {
+                // Calculate the total amount of all the products in the order
+                let total_amount = 0;
+                for(let product of order.products) {
+                    total_amount += product.amount * product.quantity;
+                }
+                order.totalAmount = total_amount;
+                // Set the picture of the order to be the first product which we get.
+                // This is arbitrary and not for any reason!
+                order.picture = order.products[0].picture;
             }
-            order.totalAmount = total_amount;
-            // Set the picture of the order to be the first product which we get.
-            // This is arbitrary and not for any reason!
-            order.picture = order.products[0].picture;
-        }
+            response.render('shop/order', {
+                pageTitle: 'Orders',
+                activePage: 'Orders',
+                orders: orders,
+                isAuthenticated: request.user ? true : false,
+                loggedInUsername: request.user ? request.user.name : undefined,
+                isAdminUser: true
+            })
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+    else {
         response.render('shop/order', {
             pageTitle: 'Orders',
             activePage: 'Orders',
-            orders: orders
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         })
-    }).catch(error => {
-        console.log(error);
-    })
+    }
 }
 
 module.exports = {

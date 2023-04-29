@@ -2,8 +2,11 @@ const Product = require( "../models/Product");
 
 function addProductPage(request, response, next) {
     response.render('admin/add-product', { 
-        pageTitle: 'Add Product', 
-        activePage: 'Add Product' 
+        pageTitle: 'Add Product',
+        activePage: 'Add Product',
+        isAuthenticated: request.user ? true : false,
+        loggedInUsername: request.user ? request.user.name : undefined,
+        isAdminUser: true
     });
 }
 
@@ -14,7 +17,10 @@ function editProductPage(request, response, next) {
         response.render('admin/add-product', {
             pageTitle: product.title,
             activePage: 'Edit Product',
-            product: product
+            product: product,
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         });
     }).catch(error => {
         console.log(error);
@@ -68,7 +74,10 @@ function listProductPage(request, response, next) {
         response.render('admin/list-product', {
             pageTitle: 'Admin Products',
             activePage: 'Admin Products',
-            products: products
+            products: products,
+            isAuthenticated: request.user ? true : false,
+            loggedInUsername: request.user ? request.user.name : undefined,
+            isAdminUser: true
         });
     }).catch(error => {
         console.log(error);

@@ -15,17 +15,27 @@
         
             <form action="/post-cart/<%= product._id %>?currentPage=productDetail" method="POST">
                 <div class="product-instances-in-cart">
-                    <p><i><%= quantity %> units of this item in cart</i></p>
+                    <% if(isAuthenticated === true) { %>
+                        <p><i><%= quantity %> units of this item in cart</i></p>
+                    <% } else { %>
+                        <p><i>You need to be logged in to access Cart</i></p>
+                    <% } %>
                 </div>
 
-                <% if(quantity === 0) { %>
-                    <div class="controls">
-                        <button type="submit" name="action" value="add">Add to Cart</button>
-                    </div>
+                <% if(isAuthenticated === true) { %>
+                    <% if(quantity === 0) { %>
+                        <div class="controls">
+                            <button type="submit" name="action" value="add">Add to Cart</button>
+                        </div>
+                    <% } else { %>
+                        <div class="controls">
+                            <button type="submit" name="action" value="add">Add 1 more unit</button>
+                            <button type="submit" name="action" value="delete">Remove 1 unit</button>
+                        </div>
+                    <% } %>
                 <% } else { %>
                     <div class="controls">
-                        <button type="submit" name="action" value="add">Add 1 more unit</button>
-                        <button type="submit" name="action" value="delete">Remove 1 unit</button>
+                        <button type="submit" name="action" value="add" disabled>Add to Cart</button>
                     </div>
                 <% } %>
             </form>
