@@ -15,7 +15,7 @@
             <h2>Add New Product</h2>
         <% } %>
 
-        <form action="<% if(activePage === 'Edit Product') { %> /admin/edit-product/<%= product._id %> <% } else { %> /admin/post-product <% } %>" method="POST">
+        <form action="<% if(activePage === 'Edit Product') { %> /admin/edit-product/<%= product._id %> <% } else { %> /admin/post-product <% } %>" method="POST" class="product-form">
             <div class="form-group">
                 <label for="title">Title</label>
                 <% if(activePage === 'Edit Product') { %>

@@ -11,7 +11,14 @@ function postLogin(request, response, next) {
     response.redirect('/products');
 }
 
+function postLogout(request, response, next) {
+    request.session.destroy(() => {
+        response.redirect('/products');
+    })
+}
+
 module.exports = {
     getLoginPage: getLoginPage,
-    postLogin: postLogin
+    postLogin: postLogin,
+    postLogout: postLogout
 };
