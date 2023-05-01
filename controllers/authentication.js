@@ -16,12 +16,13 @@ function postLogin(request, response, next) {
 
     // First find a user with the email provided
     User.findOne({ email: email }).then(user => {
-        // If user is not found, redirec to the login page
+        // If user is not found, redirect to the login page
         if(!user) {
             console.log('User not found in database.');
             return response.redirect('/login');
         }
         else {
+            // If user is found, check if password matches
             bcrypt.compare(password, user.password).then(password_match => {
                 // If password also match, login user and redirect to products page
                 if(password_match) {
