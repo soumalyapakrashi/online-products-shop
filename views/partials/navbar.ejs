@@ -2,8 +2,11 @@
     <ul>
         <li><a href="/" class="<%= activePage === 'Shop' ? 'nav-active' : '' %>">Shop</a></li>
         <li><a href="/products" class="<%= activePage === 'Products' ? 'nav-active' : '' %>">Products</a></li>
-        <li><a href="/cart" class="<%= activePage === 'Cart' ? 'nav-active' : '' %>">Cart</a></li>
-        <li><a href="/orders" class="<%= activePage === 'Orders' ? 'nav-active' : ''%>">Orders</a></li>
+
+        <% if(isAuthenticated === true) { %>
+            <li><a href="/cart" class="<%= activePage === 'Cart' ? 'nav-active' : '' %>">Cart</a></li>
+            <li><a href="/orders" class="<%= activePage === 'Orders' ? 'nav-active' : ''%>">Orders</a></li>
+        <% } %>
 
         <% if(isAuthenticated === true && isAdminUser === true) { %>
             <li><a href="/admin/add-product" class="<%= activePage === 'Add Product' ? 'nav-active' : '' %>">Add Product</a></li>
@@ -14,6 +17,7 @@
     <ul>
         <% if(isAuthenticated === false) { %>
             <li><a href="/login" class="<%= activePage === 'Login' ? 'nav-active' : '' %>">Login</a></li>
+            <li><a href="/signup" class="<%= activePage === 'Signup' ? 'nav-active' : '' %>">Signup</a></li>
         <% } else { %>
             <li><a href="#"><%= loggedInUsername %></a></li>
             <li>
