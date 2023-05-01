@@ -11,8 +11,33 @@ function getLoginPage(request, response, next) {
 }
 
 function postLogin(request, response, next) {
-    request.session.email = request.body.email;
-    response.redirect('/products');
+    const email = request.body.email;
+    const password = request.body.password;
+
+    // First find a user with the email provided
+    User.findOne({ email: email }).then(user => {
+        // If user is not found, redirec to the login page
+        if(!user) {
+            console.log('User not found in database.');
+            return response.redirect('/login');
+        }
+        else {
+            bcrypt.compare(password, user.password).then(password_match => {
+                // If password also match, login user and redirect to products page
+                if(password_match) {
+                    request.session.email = email;
+                    return response.redirect('/products');
+                }
+                // If password does not match, redirect to login page
+                else {
+                    console.log('Invalid credentials.');
+                    return response.redirect('/login');
+                }
+            })
+        }
+    }).catch(error => {
+        console.log(error);
+    })
 }
 
 function postLogout(request, response, next) {
