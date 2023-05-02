@@ -44,6 +44,7 @@
                         </div>
                         <div class="info-display">
                             <form action="/delete-cart/<%= product._id %>" method="POST">
+                                <input type="text" name="_csrf" value="<%= csrfToken %>" class="hidden">
                                 <button type="submit">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>

@@ -56,6 +56,7 @@
                         </div>
                     </div>
                     <form action="/place-order" method="POST">
+                        <input type="text" name="_csrf" value="<%= csrfToken %>" class="hidden">
                         <button type="submit" class="btn">Place Order</button>
                     </form>
                 </div>

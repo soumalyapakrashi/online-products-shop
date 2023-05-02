@@ -99,3 +99,7 @@ nav li {
 #logout:hover {
     background-color: rgb(86, 0, 129);
 }
+
+.hidden {
+    display: none;
+}

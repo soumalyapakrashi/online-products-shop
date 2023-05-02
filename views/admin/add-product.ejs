@@ -49,6 +49,8 @@
                 <% } %>
             </div>
 
+            <input type="text" name="_csrf" value="<%= csrfToken %>" class="hidden">
+            
             <% if(activePage === 'Edit Product') { %>
                 <button type="submit">Update</button>
             <% } else { %>

@@ -30,6 +30,7 @@
                                     <p>Edit</p>
                                 </a>
                                 <form action="/admin/delete-product/<%= product._id %>" method="POST">
+                                    <input type="text" name="_csrf" value="<%= csrfToken %>" class="hidden">
                                     <button type="submit">Delete</button>
                                 </form>
                             </div>

@@ -23,6 +23,7 @@
                 </div>
 
                 <% if(isAuthenticated === true) { %>
+                    <input type="text" name="_csrf" value="<%= csrfToken %>" class="hidden">
                     <% if(quantity === 0) { %>
                         <div class="controls">
                             <button type="submit" name="action" value="add">Add to Cart</button>
