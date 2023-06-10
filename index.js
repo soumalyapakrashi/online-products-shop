@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 require('dotenv').config({
     path: path.resolve(__dirname, '.', '.env')
@@ -47,6 +48,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Register middleware for CSRF token
 app.use(csrfProtection);
+
+// Setup the flash middleware
+app.use(flash());
 
 // Put the csrfToken variable in all the views
 app.use((request, response, next) => {

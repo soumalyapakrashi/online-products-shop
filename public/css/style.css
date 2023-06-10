@@ -103,3 +103,12 @@ nav li {
 .hidden {
     display: none;
 }
+
+.message {
+    background-color: rgb(188, 188, 255);
+    padding: 20px;
+}
+
+.message-error {
+    background-color: rgb(255, 169, 169);
+}

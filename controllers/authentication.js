@@ -3,10 +3,20 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 function getLoginPage(request, response, next) {
+    // Show invalid credentials flash message if applicable
+    let error_message = request.flash('error');
+    if(error_message.length > 0) {
+        error_message = error_message[0];
+    }
+    else {
+        error_message = null;
+    }
+
     response.render('authentication/login', {
         pageTitle: 'Login',
         activePage: 'Login',
-        isAuthenticated: request.user ? true : false
+        isAuthenticated: request.user ? true : false,
+        message: error_message
     });
 }
 
@@ -19,6 +29,7 @@ function postLogin(request, response, next) {
         // If user is not found, redirect to the login page
         if(!user) {
             console.log('User not found in database.');
+            request.flash('error', 'Invalid username or password');
             return response.redirect('/login');
         }
         else {
@@ -32,6 +43,7 @@ function postLogin(request, response, next) {
                 // If password does not match, redirect to login page
                 else {
                     console.log('Invalid credentials.');
+                    request.flash('error', 'Invalid username or password');
                     return response.redirect('/login');
                 }
             })
