@@ -9,6 +9,10 @@
     <%- include('../partials/navbar') %>
 
     <div class="container">
+        <% if(message !== null) { %>
+            <p class="message message-error"><%= message %></p>
+        <% } %>
+        
         <form action="/signup" method="POST" class="product-form">
             <div class="form-group">
                 <label for="name">Name</label>

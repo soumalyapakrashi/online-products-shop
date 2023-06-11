@@ -70,10 +70,19 @@ function postLogout(request, response, next) {
 }
 
 function getSignupPage(request, response, next) {
+    let error_message = request.flash('error');
+    if(error_message.length > 0) {
+        error_message = error_message[0];
+    }
+    else {
+        error_message = null;
+    }
+
     response.render('authentication/signup', {
         pageTitle: 'Signup',
         activePage: 'Signup',
-        isAuthenticated: request.user ? true : false
+        isAuthenticated: request.user ? true : false,
+        message: error_message
     });
 }
 
@@ -87,6 +96,7 @@ function postSignup(request, response, next) {
     User.findOne({ email: email }).then(user => {
         // If user is present in the database, then redirect to the signup page
         if(user) {
+            request.flash('error', 'An user with that email already exists.');
             return response.redirect('/signup');
         }
         // If user is not present in the database, then encrypt the password and store in database
