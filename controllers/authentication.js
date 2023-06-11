@@ -104,7 +104,7 @@ function postSignup(request, response, next) {
 
                 return transporter.sendMail({
                     from: 'soumalyapakrashi@gmail.com',
-                    to: 'soumalyapakrashi@gmail.com',
+                    to: email,
                     subject: 'Welcome to Online Products Shop',
                     html: `
                         <h1>Welcome ${name}</h1>
