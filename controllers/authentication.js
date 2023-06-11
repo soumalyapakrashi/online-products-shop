@@ -1,6 +1,16 @@
+const path = require('path');
+
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+const transport = require('nodemailer-brevo-transport');
+
+require('dotenv').config({
+    path: path.resolve(__dirname, '..', '.env')
+});
 
 const User = require('../models/User');
+
+const transporter = nodemailer.createTransport(new transport({ apiKey: process.env.BREVO_API_KEY }));
 
 function getLoginPage(request, response, next) {
     // Show invalid credentials flash message if applicable
@@ -90,7 +100,18 @@ function postSignup(request, response, next) {
                 });
                 return new_user.save();
             }).then(() => {
-                return response.redirect('/login');
+                response.redirect('/login');
+
+                return transporter.sendMail({
+                    from: 'soumalyapakrashi@gmail.com',
+                    to: 'soumalyapakrashi@gmail.com',
+                    subject: 'Welcome to Online Products Shop',
+                    html: `
+                        <h1>Welcome ${name}</h1>
+                        <p>We are excited to welcome you to the <strong>Online Products Shop</strong>.
+                        Your account has been successfully created.</p>
+                    `
+                });
             })
         }
     }).catch(error => {
